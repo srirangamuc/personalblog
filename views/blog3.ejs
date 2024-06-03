@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Markdown to HTML</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+  </head>
+  <body>
+    <h1>Client -End Learning</h1>
+    <p></p>
+    <p>
+      Q) Different Imaging sites have significant cross-site data distribution
+      variance caused by different scanning settings and subject populations.
+      How to avoid negative impact on model training?
+    </p>
+    <p>Ans)</p>
+    <p>
+      * This problem is well known as "Domain Shift" Problem (or "Client
+      Shift").
+    </p>
+    <p>
+      * In an FL System domain shifts may cause difficult convergence of the
+      global model and performance degradation of some clients.
+    </p>
+    <p></p>
+    <p>1. Domain Specific Learning:</p>
+    <p>
+      * One strategy to solve this problem is to fine tune the global model
+      using domain-specific(local) data to make it more suitable for a specific
+      client. This is called Personalized FL
+    </p>
+    <p>
+      * Study Case 1: FL Framework for Magnetic Resonance Image Reconstruction
+    </p>
+    <p>
+      * In this case , a globally shared encoder is maintained on server end to
+      learn domain-invariant representations, while client side decoder is
+      trained with local data to take advantage of domain-specific properties of
+      each client.
+    </p>
+    <p>
+      * Study Case 2: FL Framework that combines a Convolutional Neural Network
+      with a Graph Neural Network to tackle the domain shift.
+    </p>
+    <p>
+      * In this case model weights of CNN are shared across clients to learn
+      independent features.
+    </p>
+    <p>
+      * For site specific data variations, a local GNN is built and fine-tuned
+      with local data in each client for disease classification.
+    </p>
+    <p>* Both type of features are learned this way.</p>
+    <p>
+      * Study Case 3: Ensemble-Based Framework to deal with client-shift for
+      medical image segmentation.
+    </p>
+    <p>
+      * Framework comprises of global model , personalized models, and a model
+      selector.
+    </p>
+    <p>
+      * Instead of working on global model, to fit the client data they propose
+      to leverage all the produced personalized models to fit different client
+      data distributions through a model selector.
+    </p>
+    <p>2. Domain Adaptation:</p>
+    <p>
+      * It aims to reduce domain shift among different medical image datasets
+      and enhance generalizability of the model.
+    </p>
+    <p>
+      * Study Case 1: A Domain discriminator/classifier is trained on these data
+      with noises to reduce domain shift.
+    </p>
+    <p>* Study Case 2:</p>
+    <p>
+      * Dinsdale propose a domain adaptation based FL Framework to remove domain
+      shift among clients caused by different scanners.
+    </p>
+    <p>
+      * In their framework medical image features are assumed to follow Gaussian
+      Distributions, and mean and std. of the learned features can be shared
+      among the clients.
+    </p>
+    <p>
+      * During training of each client model ,a label classifier and a domain
+      discriminator are jointly trained to learn features that are
+      domain-invariant i.e removing domain shift.
+    </p>
+    <p>3. Image Harmonization :</p>
+    <p>
+      * Study Case 1: Proposed a Generative replay strategy to handle data
+      heterogeneity among clients .
+    </p>
+    <p>
+      * They'll first train an auxiliary variational auto-encoder(VAE) to
+      generate medical images which resemble the input images.
+    </p>
+    <p>
+      * Each client then will take samples of both local data and generated data
+      to reduce domain shift.
+    </p>
+    <p></p>
+    <p>* Study Case 2 :</p>
+    <p>
+      * Proposed a frequency-based harmonization method to reduce client shift
+      in medical images .
+    </p>
+    <p>
+      * Medical images are transformed into frequency domain and phase
+      components are kept locally, while average amplitudes from each client are
+      shared and then normalized to harmonize all the client medical images.
+    </p>
+    <p></p>
+    <p></p>
+    <p></p>
+    <h3>Client End : Limited Data and Labels</h3>
+    <p></p>
+    <p>
+      Q ) Medical Imaging datasets are often small sized and lack label
+      information . How to avoid their negative influence on model training?
+    </p>
+    <p>A )</p>
+    <p>1. Contrast Learning:</p>
+    <p>
+      * It is a self-supervised method that can learn useful representations of
+      images by using unlabeled data .
+    </p>
+    <p>
+      * It can provide good initialization for further fine-tuning on downstream
+      tasks.
+    </p>
+    <p>
+      * Some models use contrast learning to pretrain the encoder of a U-Net in
+      each client then the global U-Net is fine-tuned with limited labeled
+      medical Images.
+    </p>
+    <p>2. Multitask learning:</p>
+    <p>
+      * When training data for each task are small-sized, jointly learning of
+      different tasks can actually share data which is an effective approach for
+      data augmentation.
+    </p>
+    <p>
+      * A Novel Optimization Framework MOCHA, extends classic multitask learning
+      in the federated env,
+    </p>
+    <p>
+      * Based on bi-convex alternating method and is guaranteed to converge.
+    </p>
+    <p>3. Weakly-Supervised Learning:</p>
+    <p>
+      * An extensive group of methods that train a model under weak supervision.
+    </p>
+    <p>* Weak Supervision information typically includes three types</p>
+    <p>
+      1. Incomplete Supervision : Only a small subset of labeled training data
+      is provided while other data has no labels. Solution is Semi-Supervised
+      Learning.
+    </p>
+    <p>
+      2. Inexact Supervision : Only coarse-grained labels are provided for
+      learning data. Solution is Multiple instance learning.
+    </p>
+    <p>
+      3. Inaccurate Supervision : Not all the provided labels are correct .
+      Learning from noisy labels is a good solution.
+    </p>
+    <p>4. Knowledge Distillation :</p>
+    <p>
+      * The Network trained on similar data is used as a teacher while the
+      client model is a student.
+    </p>
+    <p>
+      * By matching the Softmax activation output of the teacher the student can
+      learn useful knowledge for the task.
+    </p>
+    <p>5. Data Synthesis:</p>
+    <p>
+      * Given an image x in the client the authors first use Virtual Adversarial
+      Training to generate images similar to x.
+    </p>
+    <p>* Then these are used to train the local model.</p>
+    <h2>Client End : Unbalanced Data and Computation Resources</h2>
+    <p></p>
+    <p>
+      * For example, each client is supposed to conduct 50 epochs’ updates
+      before model uploading. In such a setting, a client with advanced GPUs may
+      take 1 second, while a client with weak computation utility may take 100
+      seconds. Thus, the stronger client will have to spend 99 seconds waiting
+      for weight sharing.
+    </p>
+    <p>
+      * To avoid this A semi synchronous training strategy in federated learning
+      is applied to brain age prediction.
+    </p>
+    <p>
+      * Higher computation power or fewer local data will lead to more local
+      updates (epochs).
+    </p>
+    <p></p>
+    <h1>Server - End Learning</h1>
+    <p></p>
+    <p>Problem : Weight Aggregation</p>
+    <p>Solution :</p>
+    <p>* Progressive Fourier Aggregation Strategy at the server end.</p>
+    <p>
+      * The Client with relatively bad performance caused by uneven image data
+      will get a smaller weight for the global weight aggregation.
+    </p>
+    <p>Problem : Domain Shift</p>
+    <p>Solution:</p>
+    <p>
+      * Image Heterogeneity is a major issue, which causes a biased global
+      model.
+    </p>
+    <p>
+      * In this method, the clients for which global model shows inferior
+      performance will contribute more to the total loss function, which in turn
+      optimizes the global model.
+    </p>
+    <p>
+      * Another method called FedSLD for medical image classification proposes
+      that by mitigating label distribution differences among clients.
+    </p>
+    <p>
+      * In their method, it is assumed that the amount of samples of each
+      category (label distribution) is known for the entire federation.
+    </p>
+    <p>
+      * During local model training in each client, a weighted cross-entropy
+      loss is designed as the batch loss. The weight is computed based on the
+      label distributions in each batch, with respect to their label
+      distributions across the entire federation.
+    </p>
+    <p>Problem : Client Corruption/Anomaly Detection</p>
+    <p>Solution:</p>
+    <p>
+      * Server-end outlier detection method for medical images, called Distance
+      based Outlier Suppression (DOS) .
+    </p>
+    <p>
+      * In this method , the weight of each client is calculated based on an
+      anomaly score for client using Copula-based outlier detection . A Client
+      with high outlier score will get a tiny weight during model aggregation,
+      thus reducing the negative influence of corrupted clients.
+    </p>
+    <p></p>
+    <p></p>
+    <h1>Client - Server Communication</h1>
+    <p></p>
+    <p>Problem : Data Leakage and Attack</p>
+    <p>Solution :</p>
+    <p>1. Partial Weights Sharing :</p>
+    <p>
+      * Sharing an entire model may not fully protect privacy and thus propose
+      sharing a partial model for federated learning on medical datasets.
+    </p>
+    <p>
+      * Clients only share the feature-learning part of a model for aggregation
+      on the server while keeping the last several layers private.
+    </p>
+    <p>2. Differential Privacy :</p>
+    <p>
+      * A Method to add Gaussian Random Noise to computed gradients on the
+      patients' imaging data in each client/site , thus maintaining privacy.
+    </p>
+    <p>3. Attack and Defense :</p>
+    <p>* Attack with a random gradient set and test it.</p>
+    <p>
+      * A gradient inversion algorithm is there to estimate the running
+      statistics of batch normalization layers to match the gradients from real
+      images and synthesized ones ,thus generating synthesized images that are
+      very similar to the original ones.
+    </p>
+    <p></p>
+    <p>Problem : Communication Efficiency</p>
+    <p>Solution:</p>
+    <p>* A dynamic fusion-based federated learning approach.</p>
+    <p>
+      * If a client does not upload its updated model within a certain waiting
+      time, it will be excluded by the central server for this aggregation
+      round.
+    </p>
+    <p></p>
+    <h1>Software and Datasets that can be used</h1>
+    <p></p>
+    <p>1. PySyft</p>
+    <p>2. OpenFL</p>
+    <p>3. PriMIA</p>
+    <p>4. Fed-BioMed</p>
+    <p>5. TensorFlow Federated</p>
+    <p></p>
+    <p>Brain Images</p>
+    1. <a href="https://adni.loni.usc.edu/data-samples/access-data/">ADNI</a>
+    <p>2. ABIDE</p>
+    <p>3. BraTS</p>
+    <p>4. RSNA Brain CT</p>
+    <p>5. UK BioBank</p>
+    <p>6. IXI</p>
+  </body>
+</html>
